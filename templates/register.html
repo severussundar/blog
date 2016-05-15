@@ -1,0 +1,55 @@
+<! DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0 " />
+	<meta name="author" content="Shyam Sundar "  />
+	<title>Register here </title> 
+	<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+</head>
+<body>
+   
+   <div class="container-fluid">
+      <div class="jumbotron">
+      	  <h>Register here to start blogging </h>
+      </div>
+    
+		<form method="POST" action="http://localhost:5000/register">
+		 
+		 <table> 
+		  <tr> 
+		      <td>Username :</td>  
+		      <td>{{ form.username  }}</td> 
+		  </tr> 
+		  <tr> 
+		      <td>E-mail:</td>  
+		      <td>{{ form.email  }}</td> 
+		  </tr>
+		  <tr> 
+		      <td>Password :</td>  
+		      <td>{{ form.password  }}</td> 
+		  </tr>
+		  <tr> 
+		      <td>Confirm Password :</td>  
+		      <td>{{ form.confirm  }}</td> 
+		  </tr>
+		  <tr> 
+		      <td> {{form.submit}} </td>  
+		      
+		  </tr>	
+
+		 </table>
+		  	
+		</form>
+		
+		{% if error %}
+			<p class="error"><strong>Error:</strong>{{ error }}</p>
+		{% endif %}
+
+	</div>   
+
+   	
+	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</body>
+</html>
