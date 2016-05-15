@@ -1,0 +1,25 @@
+<! DOCTYPE html>
+<html>
+<head>
+	 <title>Homepage !</title>
+     <meta charset="utf-8" />  
+     <meta name="author" content="Shyam Sundar" />
+     <meta name="viewport" content="width=device-width, initial-scale= 1.0" /> 
+     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+</head>
+<body>
+	 
+    <form role="form" method="POST" action="http://localhost:5000/write" >
+       <div class="form-group">
+         <label for="post">Write a post :</label>
+         <input type="textarea" class="form-control" name="post" id="post" required/>   	
+       </div>
+       <button type="Submit" class="btn btn-default" >Post it !</button>
+
+    </form>
+	  
+
+	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</body>

@@ -22,6 +22,14 @@ class users(db.Model):
 		self.password=password
 		self.email=email
 
+class Post(db.Model):
+	__tablename__ = 'posts'
+	username= db.Column(db.String(75),primary_key=True)
+	post=db.Column(db.String(255))
+
+	def __init__(self,username,post):
+		self.username=username
+		self.post=post
 
 db.create_all()
 
@@ -31,6 +39,10 @@ class Regform(Form):
 	password=PasswordField("Password",[validators.Required("Please fill out this field")])
 	confirm=PasswordField("Re-enter Password",[validators.EqualTo('password',message='This should match with the chosen password')] )
 	submit=SubmitField("Register!")
+
+class Posts(Form):
+	post=TextField("Write post ",[validators.Required("You cannot submit an empty post ")] )
+	submit=SubmitField("Post!")
 
 @app.route('/')
 def index():
@@ -49,10 +61,10 @@ def login_required(f):
 	return wrap
 
 
-@app.route('/home')
+@app.route('/home',methods=['GET','POST'])
 @login_required
 def home():
-	return render_template("home.html")
+	return render_template("home.html",user=session["username"])
 
 		
 @app.route('/register',methods=['GET','POST'])
@@ -63,7 +75,7 @@ def register():
 		if not request.form["username"] or not request.form["email"] or not request.form["password"] or \
 		   not request.form["confirm"] :
 		   flash("Please fill all the fields","error")
-		   return render_template("register.html",form=form,error="Some field is empty")	   
+		   return render_template("register.html",form=form,error="Fill all the fields")	   
 		
 		else:
 		   x=users.query.filter_by(username=request.form["username"])
@@ -75,23 +87,24 @@ def register():
 			  flash("Registered successfully !")
 			  return redirect(url_for('home'))
 		   else :
-			  flash("This username is already taken. Kindly choose another handle","error")
-			  return render_template("register.html",form=form)    	 
+			  error="This username is already taken. Kindly choose another handle"
+			  return render_template("register.html",form=form,error=error)    	 
 	
 	else :
 		
 		form = Regform(request.form)
-		return render_template("register.html",form=form,error="post check condition fails") 
+		return render_template("register.html",form=form) 
 
 @app.route("/login",methods=['GET','POST'])
 def login():
+	error=""
 	if request.method == "POST" :
 		username= request.form["username"]
 		password= request.form["password"]
 		registered_user= users.query.filter_by(username=username,password=password).first()
 		if registered_user is None :
-		   flash("Username or Password is incorrect","error")
-		   return redirect(url_for('index'))  
+		   error="Username or Password is incorrect"
+		   return redirect(url_for('index',error=error))  
 		
 		session["logged_in"] = True
 		session["username"] = username
@@ -105,6 +118,32 @@ def login():
 def logout():
 	session.clear()
 	return redirect(url_for("index")) 
+
+
+@app.route("/dashboard")
+@login_required
+def dashboard():
+	posts=post.query.first()
+	if posts is None :
+		return "No posts yet on the blog.You can write one in the write section."
+	else :
+		return render_template("posts.html",posts=posts)	
+
+@app.route("/write",methods=["POST","GET"])
+@login_required
+def write():
+	if request.method == "POST":
+		form=Posts(Form)
+		if not request.form["post"] :
+			flash("You cannot submit an empty post")
+			return render_template("write.html",form=form)
+		else :
+			post=Post(session['username'],request.form["post"])
+			db.session.add(post)
+			db.session.commit()
+			flash("Post added successfully")
+			return render_template("posts.html",form=form) 	
+	return render_template("posts.html",form=form)
 
 
 if __name__ == '__main__' :

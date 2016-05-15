@@ -3,14 +3,34 @@
 <head>
 	 <title>Homepage !</title>
      <meta charset="utf-8" />  
-     
+     <meta name="author" content="Shyam Sundar" />
+     <meta name="viewport" content="width=device-width, initial-scale= 1.0" /> 
+     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
 </head>
 <body>
-	<p>
-		 Welcome !
-	</p> 
+	
+	<!-- 
+        logout button 
+        textarea for publishing blog
+        newsfeed   
+    -->
+     <div class="container" >
+        <h3>Welcome {{user}}  </h3>
+        <ul class="nav nav-pills">
+           <li class="active"><a href="#">Dashboard</a></li>
+           <li class="active"><a href="#" >Write!</a></li>
+           <li class="active"><a href="{{url_for('logout')}}"  >Logout</a> </li> 
+        	
+        </ul>
+     	
+     </div>
 
+          
+	  
 
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 </body>
 
 <html>
